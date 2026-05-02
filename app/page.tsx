@@ -91,7 +91,7 @@ const testimonials = [
     role: 'Software Engineer at Vercel',
     avatar: 'PP',
     content:
-      'The best structured programming course I've taken. Every concept builds on the last, and the instructor explains the "why" behind every decision — not just the "how".',
+      "The best structured programming course I've taken. Every concept builds on the last, and the instructor explains the \"why\" behind every decision — not just the \"how\".",
     rating: 5,
   },
 ]
