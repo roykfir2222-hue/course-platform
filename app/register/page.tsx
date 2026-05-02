@@ -1,9 +1,17 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Terminal, ArrowRight, Loader2, Eye, EyeOff, AlertCircle } from 'lucide-react'
+import {
+  Terminal,
+  ArrowRight,
+  Loader2,
+  Eye,
+  EyeOff,
+  AlertCircle,
+  MailCheck,
+} from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
 type FormData = {
@@ -39,11 +47,31 @@ export default function RegisterPage() {
   const [serverError, setServerError] = useState('')
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [emailSent, setEmailSent] = useState(false)
+
+  // ── Listen for email confirmation in any open tab ──────────────────────────
+  // When the user clicks the confirmation link, Supabase exchanges the code
+  // server-side (/api/auth/callback) and stores the session. The browser
+  // client then fires SIGNED_IN on all tabs of the same origin — including
+  // this waiting tab — so we can redirect automatically without a page refresh.
+  useEffect(() => {
+    const supabase = createClient()
+
+    const { data: listener } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_IN') {
+        router.push('/dashboard')
+        router.refresh()
+      }
+    })
+
+    return () => {
+      listener.subscription.unsubscribe()
+    }
+  }, [router])
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target
     setForm((prev) => ({ ...prev, [name]: value }))
-    // Clear field error on change
     if (fieldErrors[name as keyof FormData]) {
       setFieldErrors((prev) => ({ ...prev, [name]: undefined }))
     }
@@ -63,14 +91,18 @@ export default function RegisterPage() {
     setServerError('')
 
     const supabase = createClient()
+    const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? window.location.origin
 
-    // 1. Create the auth user
+    // 1. Create the auth user.
+    // emailRedirectTo points to the auth callback route which exchanges the
+    // confirmation code for a session, then redirects to /dashboard.
+    // The session creation fires SIGNED_IN on this tab via onAuthStateChange.
     const { data: authData, error: signUpError } = await supabase.auth.signUp({
       email: form.email.trim().toLowerCase(),
       password: form.password,
       options: {
         data: { name: form.name.trim() },
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? window.location.origin}/setup-password`,
+        emailRedirectTo: `${siteUrl}/api/auth/callback?next=/dashboard`,
       },
     })
 
@@ -86,8 +118,8 @@ export default function RegisterPage() {
       return
     }
 
-    // 2. Upsert the profile row with full details
-    // The DB trigger may have already created a bare profile row — this fills in name/phone
+    // 2. Upsert the profile row with full details.
+    // The DB trigger may have already created a bare row — this fills in name/phone.
     const { error: profileError } = await supabase.from('profiles').upsert(
       {
         id: authData.user.id,
@@ -100,20 +132,103 @@ export default function RegisterPage() {
     )
 
     if (profileError) {
-      // Non-fatal: profile may already exist from trigger; log and continue
       console.error('Profile upsert error:', profileError.message)
     }
 
-    // 3. Redirect to the payment simulator
-    router.push('/payment')
+    // 3. Show the confirmation message — onAuthStateChange handles the redirect.
+    setLoading(false)
+    setEmailSent(true)
   }
 
+  // ── Email-sent confirmation view ───────────────────────────────────────────
+  if (emailSent) {
+    return (
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-4 py-16">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(124,58,237,0.12),transparent)] pointer-events-none" />
+
+        <div
+          className="relative w-full max-w-md"
+          style={{ animation: 'scaleIn 0.4s cubic-bezier(0.23,1,0.32,1) forwards' }}
+        >
+          <div className="flex justify-center mb-8">
+            <Link href="/" className="flex items-center gap-2 group">
+              <div className="w-8 h-8 rounded-xl bg-violet-600 flex items-center justify-center">
+                <Terminal className="w-4 h-4 text-white" />
+              </div>
+              <span className="font-semibold text-zinc-300 group-hover:text-zinc-100 transition-colors">
+                Masterclass
+              </span>
+            </Link>
+          </div>
+
+          <div className="glass-card rounded-2xl p-10 text-center">
+            {/* Icon */}
+            <div
+              className="w-16 h-16 rounded-full bg-violet-500/10 border border-violet-500/20 flex items-center justify-center mx-auto mb-6"
+              style={{ animation: 'scaleIn 0.5s cubic-bezier(0.23,1,0.32,1) 0.1s forwards', opacity: 0 }}
+            >
+              <MailCheck className="w-8 h-8 text-violet-400" />
+            </div>
+
+            {/* Hebrew confirmation message */}
+            <p
+              className="text-xs font-medium text-violet-400 uppercase tracking-widest mb-3"
+              style={{ animation: 'fadeUp 0.5s cubic-bezier(0.23,1,0.32,1) 0.2s forwards', opacity: 0 }}
+            >
+              כמעט סיימנו
+            </p>
+            <h2
+              className="text-xl font-bold text-white mb-3 leading-relaxed"
+              dir="rtl"
+              style={{ animation: 'fadeUp 0.5s cubic-bezier(0.23,1,0.32,1) 0.25s forwards', opacity: 0 }}
+            >
+              נשלח אליך מייל אישור.
+              <br />
+              אנא אשר אותו כדי להמשיך.
+            </h2>
+            <p
+              className="text-zinc-500 text-sm mb-8"
+              style={{ animation: 'fadeUp 0.5s cubic-bezier(0.23,1,0.32,1) 0.3s forwards', opacity: 0 }}
+            >
+              Sent to{' '}
+              <span className="text-zinc-300 font-medium">{form.email}</span>
+              <br />
+              Check your spam folder if it doesn't arrive.
+            </p>
+
+            {/* Auto-redirect indicator */}
+            <div
+              className="flex items-center justify-center gap-2 text-sm text-zinc-500"
+              style={{ animation: 'fadeUp 0.5s cubic-bezier(0.23,1,0.32,1) 0.35s forwards', opacity: 0 }}
+            >
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-violet-500" />
+              Waiting for confirmation… will redirect automatically
+            </div>
+
+            <p
+              className="text-xs text-zinc-700 mt-6"
+              style={{ animation: 'fadeUp 0.5s cubic-bezier(0.23,1,0.32,1) 0.4s forwards', opacity: 0 }}
+            >
+              Already confirmed?{' '}
+              <Link href="/login" className="text-zinc-500 hover:text-zinc-300 transition-colors underline underline-offset-2">
+                Sign in here
+              </Link>
+            </p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // ── Registration form view ─────────────────────────────��───────────────────
   return (
     <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-4 py-16">
-      {/* Background glow */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(124,58,237,0.12),transparent)] pointer-events-none" />
 
-      <div className="relative w-full max-w-md" style={{ animation: 'scaleIn 0.4s cubic-bezier(0.23,1,0.32,1) forwards' }}>
+      <div
+        className="relative w-full max-w-md"
+        style={{ animation: 'scaleIn 0.4s cubic-bezier(0.23,1,0.32,1) forwards' }}
+      >
         {/* Logo */}
         <div className="flex justify-center mb-8">
           <Link href="/" className="flex items-center gap-2 group">
@@ -133,7 +248,6 @@ export default function RegisterPage() {
             <p className="text-zinc-400 text-sm">Join the course and start learning today</p>
           </div>
 
-          {/* Server error */}
           {serverError && (
             <div className="flex items-start gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20 mb-6">
               <AlertCircle className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
@@ -254,7 +368,10 @@ export default function RegisterPage() {
 
           <p className="text-center text-sm text-zinc-500 mt-6">
             Already have an account?{' '}
-            <Link href="/login" className="text-violet-400 hover:text-violet-300 transition-colors font-medium">
+            <Link
+              href="/login"
+              className="text-violet-400 hover:text-violet-300 transition-colors font-medium"
+            >
               Sign in
             </Link>
           </p>
