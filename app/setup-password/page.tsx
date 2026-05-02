@@ -45,7 +45,7 @@ export default function SetupPasswordPage() {
 
     const { error: resetError } = await supabase.auth.resetPasswordForEmail(
       email.trim().toLowerCase(),
-      { redirectTo: `${window.location.origin}/setup-password` }
+      { redirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? window.location.origin}/setup-password` }
     )
 
     setLoading(false)

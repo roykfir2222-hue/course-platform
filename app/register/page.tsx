@@ -70,7 +70,7 @@ export default function RegisterPage() {
       password: form.password,
       options: {
         data: { name: form.name.trim() },
-        emailRedirectTo: `${window.location.origin}/setup-password`,
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? window.location.origin}/setup-password`,
       },
     })
 
