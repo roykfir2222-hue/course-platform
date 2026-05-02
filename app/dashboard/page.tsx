@@ -180,7 +180,7 @@ const curriculum: Module[] = [
         duration: '70m',
         youtubeId: 'RjHflb-3gk8',
         description:
-          'Connect everything we've built into a complete SaaS application. Auth, database, UI, and deployment.',
+          "Connect everything we've built into a complete SaaS application. Auth, database, UI, and deployment.",
       },
     ],
   },
