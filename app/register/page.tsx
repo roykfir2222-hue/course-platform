@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
@@ -10,7 +10,7 @@ import {
   Eye,
   EyeOff,
   AlertCircle,
-  MailCheck,
+  ShieldCheck,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -40,6 +40,8 @@ function validateForm(data: FormData): FieldErrors {
   return errors
 }
 
+const OTP_LENGTH = 6
+
 export default function RegisterPage() {
   const router = useRouter()
   const [form, setForm] = useState<FormData>({ name: '', phone: '', email: '', password: '' })
@@ -47,27 +49,17 @@ export default function RegisterPage() {
   const [serverError, setServerError] = useState('')
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
-  const [emailSent, setEmailSent] = useState(false)
+  const [step, setStep] = useState<'form' | 'otp'>('form')
+  const [otpDigits, setOtpDigits] = useState<string[]>(Array(OTP_LENGTH).fill(''))
+  const [otpError, setOtpError] = useState('')
+  const [otpLoading, setOtpLoading] = useState(false)
+  const otpRefs = useRef<(HTMLInputElement | null)[]>(Array(OTP_LENGTH).fill(null))
 
-  // ── Listen for email confirmation in any open tab ──────────────────────────
-  // When the user clicks the confirmation link, Supabase exchanges the code
-  // server-side (/api/auth/callback) and stores the session. The browser
-  // client then fires SIGNED_IN on all tabs of the same origin — including
-  // this waiting tab — so we can redirect automatically without a page refresh.
   useEffect(() => {
-    const supabase = createClient()
-
-    const { data: listener } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'SIGNED_IN') {
-        router.push('/dashboard')
-        router.refresh()
-      }
-    })
-
-    return () => {
-      listener.subscription.unsubscribe()
+    if (step === 'otp') {
+      setTimeout(() => otpRefs.current[0]?.focus(), 100)
     }
-  }, [router])
+  }, [step])
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target
@@ -76,6 +68,37 @@ export default function RegisterPage() {
       setFieldErrors((prev) => ({ ...prev, [name]: undefined }))
     }
     setServerError('')
+  }
+
+  function handleOtpChange(index: number, value: string) {
+    // Handle paste of full code
+    if (value.length > 1) {
+      const digits = value.replace(/\D/g, '').slice(0, OTP_LENGTH).split('')
+      const newDigits = [...otpDigits]
+      digits.forEach((d, i) => {
+        if (index + i < OTP_LENGTH) newDigits[index + i] = d
+      })
+      setOtpDigits(newDigits)
+      const nextIndex = Math.min(index + digits.length, OTP_LENGTH - 1)
+      otpRefs.current[nextIndex]?.focus()
+      return
+    }
+
+    const digit = value.replace(/\D/g, '')
+    const newDigits = [...otpDigits]
+    newDigits[index] = digit
+    setOtpDigits(newDigits)
+    setOtpError('')
+
+    if (digit && index < OTP_LENGTH - 1) {
+      otpRefs.current[index + 1]?.focus()
+    }
+  }
+
+  function handleOtpKeyDown(index: number, e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Backspace' && !otpDigits[index] && index > 0) {
+      otpRefs.current[index - 1]?.focus()
+    }
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -91,18 +114,13 @@ export default function RegisterPage() {
     setServerError('')
 
     const supabase = createClient()
-    const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? window.location.origin
 
-    // 1. Create the auth user.
-    // emailRedirectTo points to the auth callback route which exchanges the
-    // confirmation code for a session, then redirects to /dashboard.
-    // The session creation fires SIGNED_IN on this tab via onAuthStateChange.
+    // Create the auth user — Supabase will email the 6-digit OTP code
     const { data: authData, error: signUpError } = await supabase.auth.signUp({
       email: form.email.trim().toLowerCase(),
       password: form.password,
       options: {
         data: { name: form.name.trim() },
-        emailRedirectTo: `${siteUrl}/api/auth/callback?next=/dashboard`,
       },
     })
 
@@ -118,8 +136,7 @@ export default function RegisterPage() {
       return
     }
 
-    // 2. Upsert the profile row with full details.
-    // The DB trigger may have already created a bare row — this fills in name/phone.
+    // Upsert the profile row — DB trigger may have created a bare row already
     const { error: profileError } = await supabase.from('profiles').upsert(
       {
         id: authData.user.id,
@@ -135,13 +152,41 @@ export default function RegisterPage() {
       console.error('Profile upsert error:', profileError.message)
     }
 
-    // 3. Show the confirmation message — onAuthStateChange handles the redirect.
     setLoading(false)
-    setEmailSent(true)
+    setStep('otp')
   }
 
-  // ── Email-sent confirmation view ───────────────────────────────────────────
-  if (emailSent) {
+  async function handleVerifyOtp(e: React.FormEvent) {
+    e.preventDefault()
+
+    const token = otpDigits.join('')
+    if (token.length < OTP_LENGTH) {
+      setOtpError('Please enter all 6 digits.')
+      return
+    }
+
+    setOtpLoading(true)
+    setOtpError('')
+
+    const supabase = createClient()
+    const { error } = await supabase.auth.verifyOtp({
+      email: form.email.trim().toLowerCase(),
+      token,
+      type: 'signup',
+    })
+
+    if (error) {
+      setOtpError(error.message)
+      setOtpLoading(false)
+      return
+    }
+
+    router.push('/dashboard')
+    router.refresh()
+  }
+
+  // ── OTP verification step ──────────────────────────────────────────────────
+  if (step === 'otp') {
     return (
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-4 py-16">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(124,58,237,0.12),transparent)] pointer-events-none" />
@@ -161,58 +206,96 @@ export default function RegisterPage() {
             </Link>
           </div>
 
-          <div className="glass-card rounded-2xl p-10 text-center">
-            {/* Icon */}
+          <div className="glass-card rounded-2xl p-10">
             <div
               className="w-16 h-16 rounded-full bg-violet-500/10 border border-violet-500/20 flex items-center justify-center mx-auto mb-6"
               style={{ animation: 'scaleIn 0.5s cubic-bezier(0.23,1,0.32,1) 0.1s forwards', opacity: 0 }}
             >
-              <MailCheck className="w-8 h-8 text-violet-400" />
+              <ShieldCheck className="w-8 h-8 text-violet-400" />
             </div>
 
-            {/* Hebrew confirmation message */}
-            <p
-              className="text-xs font-medium text-violet-400 uppercase tracking-widest mb-3"
-              style={{ animation: 'fadeUp 0.5s cubic-bezier(0.23,1,0.32,1) 0.2s forwards', opacity: 0 }}
+            <div
+              className="text-center mb-8"
+              style={{ animation: 'fadeUp 0.5s cubic-bezier(0.23,1,0.32,1) 0.15s forwards', opacity: 0 }}
             >
-              כמעט סיימנו
-            </p>
-            <h2
-              className="text-xl font-bold text-white mb-3 leading-relaxed"
-              dir="rtl"
-              style={{ animation: 'fadeUp 0.5s cubic-bezier(0.23,1,0.32,1) 0.25s forwards', opacity: 0 }}
-            >
-              נשלח אליך מייל אישור.
-              <br />
-              אנא אשר אותו כדי להמשיך.
-            </h2>
+              <p className="text-xs font-medium text-violet-400 uppercase tracking-widest mb-3">
+                אימות מייל
+              </p>
+              <h2 className="text-xl font-bold text-white mb-3" dir="rtl">
+                הכנס את הקוד שנשלח אליך
+              </h2>
+              <p className="text-zinc-500 text-sm">
+                Sent to{' '}
+                <span className="text-zinc-300 font-medium">{form.email}</span>
+              </p>
+            </div>
+
+            <form onSubmit={handleVerifyOtp} noValidate>
+              <div
+                className="flex gap-2 justify-center mb-6"
+                style={{ animation: 'fadeUp 0.5s cubic-bezier(0.23,1,0.32,1) 0.2s forwards', opacity: 0 }}
+              >
+                {otpDigits.map((digit, i) => (
+                  <input
+                    key={i}
+                    ref={(el) => { otpRefs.current[i] = el }}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={6}
+                    value={digit}
+                    onChange={(e) => handleOtpChange(i, e.target.value)}
+                    onKeyDown={(e) => handleOtpKeyDown(i, e)}
+                    onFocus={(e) => e.target.select()}
+                    className="w-11 h-14 text-center text-xl font-bold bg-zinc-900 border border-zinc-700 rounded-xl text-white focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 transition-colors"
+                    aria-label={`Digit ${i + 1}`}
+                  />
+                ))}
+              </div>
+
+              {otpError && (
+                <div className="flex items-start gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20 mb-4">
+                  <AlertCircle className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
+                  <p className="text-sm text-red-300">{otpError}</p>
+                </div>
+              )}
+
+              <div style={{ animation: 'fadeUp 0.5s cubic-bezier(0.23,1,0.32,1) 0.25s forwards', opacity: 0 }}>
+                <button
+                  type="submit"
+                  disabled={otpLoading || otpDigits.join('').length < OTP_LENGTH}
+                  className="btn-press w-full flex items-center justify-center gap-2 py-3.5 bg-violet-600 hover:bg-violet-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors duration-150"
+                >
+                  {otpLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Verifying…
+                    </>
+                  ) : (
+                    <>
+                      Verify & Continue
+                      <ArrowRight className="w-4 h-4" />
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+
             <p
-              className="text-zinc-500 text-sm mb-8"
+              className="text-center text-xs text-zinc-600 mt-6"
               style={{ animation: 'fadeUp 0.5s cubic-bezier(0.23,1,0.32,1) 0.3s forwards', opacity: 0 }}
             >
-              Sent to{' '}
-              <span className="text-zinc-300 font-medium">{form.email}</span>
-              <br />
-              Check your spam folder if it doesn't arrive.
-            </p>
-
-            {/* Auto-redirect indicator */}
-            <div
-              className="flex items-center justify-center gap-2 text-sm text-zinc-500"
-              style={{ animation: 'fadeUp 0.5s cubic-bezier(0.23,1,0.32,1) 0.35s forwards', opacity: 0 }}
-            >
-              <Loader2 className="w-3.5 h-3.5 animate-spin text-violet-500" />
-              Waiting for confirmation… will redirect automatically
-            </div>
-
-            <p
-              className="text-xs text-zinc-700 mt-6"
-              style={{ animation: 'fadeUp 0.5s cubic-bezier(0.23,1,0.32,1) 0.4s forwards', opacity: 0 }}
-            >
-              Already confirmed?{' '}
-              <Link href="/login" className="text-zinc-500 hover:text-zinc-300 transition-colors underline underline-offset-2">
-                Sign in here
-              </Link>
+              Didn't receive a code?{' '}
+              <button
+                type="button"
+                onClick={() => {
+                  setStep('form')
+                  setOtpDigits(Array(OTP_LENGTH).fill(''))
+                  setOtpError('')
+                }}
+                className="text-zinc-500 hover:text-zinc-300 transition-colors underline underline-offset-2"
+              >
+                Go back
+              </button>
             </p>
           </div>
         </div>
@@ -220,7 +303,7 @@ export default function RegisterPage() {
     )
   }
 
-  // ── Registration form view ─────────────────────────────��───────────────────
+  // ── Registration form view ─────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-4 py-16">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(124,58,237,0.12),transparent)] pointer-events-none" />
@@ -359,7 +442,7 @@ export default function RegisterPage() {
                 </>
               ) : (
                 <>
-                  Continue to Payment
+                  Continue
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
