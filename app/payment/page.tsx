@@ -30,7 +30,7 @@ export default function PaymentPage() {
     supabase.auth.getUser().then(({ data }) => {
       if (data.user) {
         setUserEmail(data.user.email ?? '')
-        setUserName(data.user.user_metadata?.name ?? 'Student')
+        setUserName(data.user.user_metadata?.name ?? 'תלמיד')
       }
     })
   }, [])
@@ -39,7 +39,6 @@ export default function PaymentPage() {
     setStep('processing')
     setErrorMessage('')
 
-    // Simulate a realistic processing delay
     await new Promise((resolve) => setTimeout(resolve, 2200))
 
     try {
@@ -52,24 +51,23 @@ export default function PaymentPage() {
 
       setStep('success')
 
-      // Redirect to dashboard after showing the success state
       setTimeout(() => {
         router.push('/dashboard')
         router.refresh()
       }, 2000)
     } catch (err) {
-      setErrorMessage(err instanceof Error ? err.message : 'An unexpected error occurred.')
+      setErrorMessage(err instanceof Error ? err.message : 'אירעה שגיאה בלתי צפויה.')
       setStep('error')
     }
   }
 
   const includedItems = [
-    '18 in-depth video lessons',
-    '6 structured modules',
-    'Full source code on GitHub',
-    'Private Discord community',
-    'Certificate of completion',
-    'Lifetime access + free updates',
+    '18 שיעורי וידאו מעמיקים',
+    '6 מודולים מובנים',
+    'קוד מקור מלא ב-GitHub',
+    'קהילת Discord פרטית',
+    'תעודת סיום',
+    'גישה לנצח + עדכונים חינם',
   ]
 
   return (
@@ -99,14 +97,14 @@ export default function PaymentPage() {
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-xs font-medium text-violet-400 uppercase tracking-widest mb-1">
-                    Invoice #INV-2024-001
+                    חשבונית #INV-2024-001
                   </p>
-                  <h1 className="text-xl font-bold text-white">Complete your enrollment</h1>
+                  <h1 className="text-xl font-bold text-white">השלם את ההרשמה שלך</h1>
                   {userName && (
-                    <p className="text-zinc-400 text-sm mt-1">Hello, {userName}</p>
+                    <p className="text-zinc-400 text-sm mt-1">שלום, {userName}</p>
                   )}
                 </div>
-                {/* Mock Invoice4U badge */}
+                {/* Invoice4U badge */}
                 <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-800 border border-zinc-700">
                   <CreditCard className="w-3.5 h-3.5 text-zinc-400" />
                   <span className="text-xs font-medium text-zinc-400">Invoice4U</span>
@@ -118,21 +116,21 @@ export default function PaymentPage() {
               {/* Order summary */}
               <div className="mb-6">
                 <h2 className="text-xs font-medium text-zinc-500 uppercase tracking-widest mb-4">
-                  Order Summary
+                  סיכום הזמנה
                 </h2>
                 <div className="flex items-center justify-between py-3 border-b border-zinc-800">
                   <div>
                     <p className="text-sm font-medium text-zinc-100">Full-Stack Masterclass</p>
-                    <p className="text-xs text-zinc-500 mt-0.5">Lifetime access · All modules</p>
+                    <p className="text-xs text-zinc-500 mt-0.5">גישה לנצח · כל המודולים</p>
                   </div>
                   <p className="text-sm font-semibold text-zinc-100">$197.00</p>
                 </div>
                 <div className="flex items-center justify-between py-3 border-b border-zinc-800">
-                  <p className="text-sm text-zinc-400">Subtotal</p>
+                  <p className="text-sm text-zinc-400">סכום ביניים</p>
                   <p className="text-sm text-zinc-400">$197.00</p>
                 </div>
                 <div className="flex items-center justify-between py-3">
-                  <p className="text-base font-semibold text-white">Total</p>
+                  <p className="text-base font-semibold text-white">סה"כ</p>
                   <p className="text-xl font-bold text-white">$197.00</p>
                 </div>
               </div>
@@ -140,7 +138,7 @@ export default function PaymentPage() {
               {/* What's included */}
               <div className="mb-6 p-4 rounded-xl bg-zinc-900/50 border border-zinc-800">
                 <p className="text-xs font-medium text-zinc-400 uppercase tracking-widest mb-3">
-                  What's included
+                  מה כלול
                 </p>
                 <ul className="space-y-2">
                   {includedItems.map((item) => (
@@ -157,35 +155,35 @@ export default function PaymentPage() {
               {/* Billing to */}
               {userEmail && (
                 <div className="mb-6 flex items-center justify-between text-sm">
-                  <span className="text-zinc-500">Billing to</span>
-                  <span className="text-zinc-300 font-medium">{userEmail}</span>
+                  <span className="text-zinc-500">חיוב לכתובת</span>
+                  <span className="text-zinc-300 font-medium" dir="ltr">{userEmail}</span>
                 </div>
               )}
 
-              {/* ── SIMULATE PAYMENT BUTTON ───────────────────────────── */}
+              {/* Simulate Payment Button */}
               <button
                 onClick={handleSimulatePayment}
                 className="btn-press w-full flex items-center justify-center gap-2 py-4 bg-violet-600 hover:bg-violet-500 text-white font-semibold rounded-xl text-base transition-colors duration-150 shadow-[0_0_30px_rgba(124,58,237,0.25)] mb-4"
               >
                 <Shield className="w-4 h-4" />
-                Simulate Successful Payment
+                סימולציית תשלום מוצלח
               </button>
 
               {/* Trust signals */}
               <div className="flex items-center justify-center gap-6 text-xs text-zinc-600">
                 <span className="flex items-center gap-1.5">
-                  <Lock className="w-3 h-3" /> Secure checkout
+                  <Lock className="w-3 h-3" /> תשלום מאובטח
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <Star className="w-3 h-3" /> 30-day refund
+                  <Star className="w-3 h-3" /> החזר 30 יום
                 </span>
               </div>
 
               {/* Demo notice */}
               <div className="mt-5 p-3 rounded-lg bg-amber-500/5 border border-amber-500/15">
                 <p className="text-xs text-amber-400/70 text-center">
-                  <strong>Demo mode:</strong> This is a payment simulator. No real charge is made.
-                  Click the button above to grant course access.
+                  <strong>מצב הדגמה:</strong> זהו סימולטור תשלום. לא מתבצע חיוב אמיתי.
+                  לחץ על הכפתור למעלה להענקת גישה לקורס.
                 </p>
               </div>
             </div>
@@ -196,22 +194,21 @@ export default function PaymentPage() {
         {step === 'processing' && (
           <div className="glass-card rounded-2xl p-12 text-center">
             <div className="relative w-20 h-20 mx-auto mb-6">
-              {/* Spinning ring */}
               <div className="absolute inset-0 rounded-full border-2 border-zinc-800" />
               <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-violet-500 animate-spin" />
               <div className="absolute inset-0 flex items-center justify-center">
                 <CreditCard className="w-8 h-8 text-violet-400" />
               </div>
             </div>
-            <h2 className="text-xl font-bold text-white mb-2">Processing payment…</h2>
-            <p className="text-zinc-400 text-sm">Verifying your transaction. Please wait.</p>
+            <h2 className="text-xl font-bold text-white mb-2">מעבד תשלום...</h2>
+            <p className="text-zinc-400 text-sm">מאמת את העסקה שלך. אנא המתן.</p>
 
             <div className="mt-8 space-y-2">
-              {['Connecting to payment gateway', 'Verifying transaction', 'Granting course access'].map(
+              {['מתחבר לשער התשלומים', 'מאמת עסקה', 'מעניק גישה לקורס'].map(
                 (label, i) => (
                   <div
                     key={label}
-                    className="flex items-center gap-3 text-sm"
+                    className="flex items-center gap-3 text-sm justify-center"
                     style={{
                       animation: `fadeIn 0.3s ease-out ${i * 600}ms forwards`,
                       opacity: 0,
@@ -235,13 +232,13 @@ export default function PaymentPage() {
             >
               <CheckCircle2 className="w-10 h-10 text-emerald-400" />
             </div>
-            <h2 className="text-2xl font-bold text-white mb-2">Payment successful!</h2>
+            <h2 className="text-2xl font-bold text-white mb-2">התשלום הצליח!</h2>
             <p className="text-zinc-400 text-sm mb-4">
-              You now have full access to the course. Redirecting to your dashboard…
+              יש לך עכשיו גישה מלאה לקורס. מעביר אותך ללוח הבקרה...
             </p>
             <div className="flex items-center justify-center gap-2">
               <Loader2 className="w-4 h-4 text-violet-400 animate-spin" />
-              <span className="text-sm text-zinc-500">Loading dashboard…</span>
+              <span className="text-sm text-zinc-500">טוען לוח בקרה...</span>
             </div>
           </div>
         )}
@@ -252,13 +249,13 @@ export default function PaymentPage() {
             <div className="w-16 h-16 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center mx-auto mb-5">
               <AlertCircle className="w-8 h-8 text-red-400" />
             </div>
-            <h2 className="text-xl font-bold text-white mb-2">Payment failed</h2>
+            <h2 className="text-xl font-bold text-white mb-2">התשלום נכשל</h2>
             <p className="text-zinc-400 text-sm mb-6">{errorMessage}</p>
             <button
               onClick={() => setStep('invoice')}
               className="btn-press px-6 py-3 bg-violet-600 hover:bg-violet-500 text-white font-medium rounded-xl transition-colors duration-150"
             >
-              Try Again
+              נסה שנית
             </button>
           </div>
         )}

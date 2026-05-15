@@ -55,7 +55,7 @@ const curriculum: Module[] = [
         duration: '42m',
         youtubeId: 'Ke90Tje7VS0',
         description:
-          'Learn the building blocks of every React application. We cover component creation, JSX syntax, and how to pass data between components using props.',
+          'למד את אבני הבניין של כל אפליקציית React. נכסה יצירת קומפוננטות, תחביר JSX וכיצד להעביר נתונים בין קומפוננטות באמצעות props.',
       },
       {
         id: 'l2',
@@ -63,7 +63,7 @@ const curriculum: Module[] = [
         duration: '38m',
         youtubeId: 'O6P86uwfdR0',
         description:
-          'Understand local component state, the useState hook, and how React re-renders. We build an interactive todo list from scratch.',
+          'הבן state מקומי של קומפוננטות, ה-hook של useState, וכיצד React מרנדר מחדש. נבנה רשימת מטלות אינטראקטיבית מאפס.',
       },
       {
         id: 'l3',
@@ -71,7 +71,7 @@ const curriculum: Module[] = [
         duration: '35m',
         youtubeId: 'TNhaISOUy6Q',
         description:
-          'Master the useEffect hook — fetch data, subscribe to events, and clean up side effects. Avoid the most common pitfalls.',
+          'שלוט ב-hook של useEffect — שליפת נתונים, מנוי לאירועים וניקוי תופעות לוואי. הימנע מהמלכודות הנפוצות ביותר.',
       },
     ],
   },
@@ -86,7 +86,7 @@ const curriculum: Module[] = [
         duration: '44m',
         youtubeId: '6ThXsUwLWvc',
         description:
-          'Extract reusable logic into custom hooks. We build useFetch, useLocalStorage, and useDebounce from the ground up.',
+          'חלץ לוגיקה לשימוש חוזר ל-custom hooks. נבנה useFetch, useLocalStorage ו-useDebounce מאפס.',
       },
       {
         id: 'l5',
@@ -94,7 +94,7 @@ const curriculum: Module[] = [
         duration: '40m',
         youtubeId: 'lhMKvyLRWo0',
         description:
-          'Manage application-wide state without prop drilling. Learn when to use Context vs a state library.',
+          'נהל state ברמת האפליקציה ללא prop drilling. למד מתי להשתמש ב-Context לעומת ספריית state.',
       },
       {
         id: 'l6',
@@ -102,7 +102,7 @@ const curriculum: Module[] = [
         duration: '46m',
         youtubeId: 'wTnHqRLZmb8',
         description:
-          'useMemo, useCallback, React.memo — when to use them and when to skip them. Profile real performance issues.',
+          'useMemo, useCallback, React.memo — מתי להשתמש בהם ומתי לדלג עליהם. פרופיל בעיות ביצועים אמיתיות.',
       },
       {
         id: 'l7',
@@ -110,7 +110,7 @@ const curriculum: Module[] = [
         duration: '52m',
         youtubeId: '2tJedF8I-8Q',
         description:
-          'Understand the shift to server components in Next.js. Learn the mental model for client/server boundaries.',
+          'הבן את המעבר ל-server components ב-Next.js. למד את המודל המנטלי לגבולות client/server.',
       },
     ],
   },
@@ -125,7 +125,7 @@ const curriculum: Module[] = [
         duration: '50m',
         youtubeId: 'fBNz5xF-Kx4',
         description:
-          'Build a REST API from scratch with Node.js and Express. Routing, middleware, error handling, and project structure.',
+          'בנה REST API מאפס עם Node.js ו-Express. ניתוב, middleware, טיפול בשגיאות ומבנה פרויקט.',
       },
       {
         id: 'l9',
@@ -133,7 +133,7 @@ const curriculum: Module[] = [
         duration: '38m',
         youtubeId: 'lsMQRaeKNDk',
         description:
-          'Design APIs that other developers love to use. Resource naming, HTTP methods, status codes, and versioning.',
+          'עצב APIs שמפתחים אחרים יאהבו להשתמש בהם. שמות משאבים, שיטות HTTP, קודי סטטוס וגרסאות.',
       },
       {
         id: 'l10',
@@ -141,7 +141,7 @@ const curriculum: Module[] = [
         duration: '55m',
         youtubeId: 'zJSY8tbf_ys',
         description:
-          'Set up a production PostgreSQL database with Supabase. Write queries, design schemas, and use Row Level Security.',
+          'הגדר מסד נתונים PostgreSQL לפרודקשן עם Supabase. כתוב שאילתות, עצב סכמות והשתמש ב-Row Level Security.',
       },
       {
         id: 'l11',
@@ -149,7 +149,7 @@ const curriculum: Module[] = [
         duration: '48m',
         youtubeId: '7Q17ubqLfaM',
         description:
-          'Build secure authentication with JWTs. Implement sign-up, login, token refresh, and protected routes.',
+          'בנה אימות מאובטח עם JWTs. הטמע הרשמה, כניסה, רענון טוקן ונתיבים מוגנים.',
       },
     ],
   },
@@ -164,7 +164,7 @@ const curriculum: Module[] = [
         duration: '60m',
         youtubeId: 'wm5gMKuwSYk',
         description:
-          'The complete guide to the Next.js App Router. Layouts, templates, loading UI, error boundaries, and parallel routes.',
+          'המדריך המקיף ל-Next.js App Router. layouts, templates, loading UI, error boundaries ו-parallel routes.',
       },
       {
         id: 'l13',
@@ -172,7 +172,7 @@ const curriculum: Module[] = [
         duration: '44m',
         youtubeId: 'dDpZfOQBMaU',
         description:
-          'Replace API routes for mutations with Server Actions. Forms, optimistic updates, and revalidation.',
+          'החלף API routes למוטציות עם Server Actions. טפסים, עדכונים אופטימיסטיים ו-revalidation.',
       },
       {
         id: 'l14',
@@ -180,7 +180,7 @@ const curriculum: Module[] = [
         duration: '70m',
         youtubeId: 'RjHflb-3gk8',
         description:
-          "Connect everything we've built into a complete SaaS application. Auth, database, UI, and deployment.",
+          'חבר את כל מה שבנינו לאפליקציית SaaS שלמה. אימות, מסד נתונים, ממשק משתמש ופריסה.',
       },
     ],
   },
@@ -195,7 +195,7 @@ const curriculum: Module[] = [
         duration: '36m',
         youtubeId: 'GhP5HCzecLM',
         description:
-          'Test your logic and components with Vitest. Write fast, reliable tests that give you confidence to ship.',
+          'בדוק את הלוגיקה והקומפוננטות שלך עם Vitest. כתוב בדיקות מהירות ואמינות שנותנות לך ביטחון לשלוח.',
       },
       {
         id: 'l16',
@@ -203,7 +203,7 @@ const curriculum: Module[] = [
         duration: '42m',
         youtubeId: 'E3K1sKQiNjM',
         description:
-          'Automate full user-flow testing. Write E2E tests that catch real bugs before they reach production.',
+          'אוטומציה של בדיקות זרימת משתמש מלאה. כתוב בדיקות E2E שתופסות באגים אמיתיים לפני שהם מגיעים לפרודקשן.',
       },
     ],
   },
@@ -218,7 +218,7 @@ const curriculum: Module[] = [
         duration: '38m',
         youtubeId: 'R8_veQiYBjI',
         description:
-          'Automate your deploy pipeline. Run tests, lint, and deploy to production automatically on every push.',
+          'אוטומציה של pipeline הפריסה שלך. הרץ בדיקות, lint ופרוס לפרודקשן אוטומטית בכל push.',
       },
       {
         id: 'l18',
@@ -226,7 +226,7 @@ const curriculum: Module[] = [
         duration: '50m',
         youtubeId: 'pTFZFxd5uri',
         description:
-          'Containerize your app and deploy it. Environment variables, secrets, health checks, and zero-downtime deploys.',
+          'אחסן את האפליקציה שלך ב-container ופרוס אותה. משתני סביבה, סודות, בדיקות בריאות ופריסה ללא downtime.',
       },
     ],
   },
@@ -259,7 +259,6 @@ function VideoPlayer({ lesson }: { lesson: Lesson }) {
             alt={lesson.title}
             className="absolute inset-0 w-full h-full object-cover"
             onError={(e) => {
-              // Fallback to a gradient if the thumbnail fails
               ;(e.target as HTMLImageElement).style.display = 'none'
             }}
           />
@@ -271,7 +270,7 @@ function VideoPlayer({ lesson }: { lesson: Lesson }) {
           <button
             onClick={() => setPlaying(true)}
             className="absolute inset-0 flex items-center justify-center group"
-            aria-label="Play video"
+            aria-label="הפעל וידאו"
           >
             <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center transition-all duration-200 group-hover:scale-110 group-hover:bg-white/20 group-active:scale-95">
               <Play className="w-7 h-7 text-white fill-white ml-1" />
@@ -279,7 +278,7 @@ function VideoPlayer({ lesson }: { lesson: Lesson }) {
           </button>
 
           {/* Duration badge */}
-          <div className="absolute bottom-4 right-4 flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-black/60 backdrop-blur-sm border border-white/10">
+          <div className="absolute bottom-4 left-4 flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-black/60 backdrop-blur-sm border border-white/10">
             <Clock className="w-3 h-3 text-zinc-400" />
             <span className="text-xs text-zinc-300 font-medium">{lesson.duration}</span>
           </div>
@@ -298,7 +297,7 @@ export default function DashboardPage() {
   const [activeLessonId, setActiveLessonId] = useState(allLessons[0].id)
   const [completedIds, setCompletedIds] = useState<Set<string>>(new Set())
   const [sidebarOpen, setSidebarOpen] = useState(true)
-  const [userName, setUserName] = useState('Student')
+  const [userName, setUserName] = useState('תלמיד')
 
   const activeLesson = allLessons.find((l) => l.id === activeLessonId) ?? allLessons[0]
   const activeLessonIndex = allLessons.findIndex((l) => l.id === activeLessonId)
@@ -309,7 +308,7 @@ export default function DashboardPage() {
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       if (data.user) {
-        setUserName(data.user.user_metadata?.name ?? data.user.email?.split('@')[0] ?? 'Student')
+        setUserName(data.user.user_metadata?.name ?? data.user.email?.split('@')[0] ?? 'תלמיד')
       }
     })
   }, [])
@@ -369,15 +368,15 @@ export default function DashboardPage() {
           </div>
 
           {/* User */}
-          <div className="flex items-center gap-2 pl-3 border-l border-zinc-800">
+          <div className="flex items-center gap-2 pr-3 border-r border-zinc-800">
             <div className="w-7 h-7 rounded-full bg-gradient-to-br from-violet-500 to-indigo-500 flex items-center justify-center text-xs font-bold text-white select-none">
               {userName.charAt(0).toUpperCase()}
             </div>
             <span className="text-sm text-zinc-300 hidden sm:block">{userName}</span>
             <button
               onClick={handleLogout}
-              className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 transition-colors ml-1"
-              title="Sign out"
+              className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 transition-colors mr-1"
+              title="התנתק"
             >
               <LogOut className="w-4 h-4" />
             </button>
@@ -387,13 +386,13 @@ export default function DashboardPage() {
 
       {/* ── Body ────────────────────────────────────────────────────────── */}
       <div className="flex-1 flex overflow-hidden">
-        {/* ── Sidebar ───────────────────────────────────────────────── */}
+        {/* ── Sidebar (RIGHT in RTL) ─────────────────────────────────── */}
         <aside
           className={`
-            flex-shrink-0 w-72 border-r border-zinc-800 bg-zinc-950 flex flex-col overflow-hidden
+            flex-shrink-0 w-72 border-l border-zinc-800 bg-zinc-950 flex flex-col overflow-hidden
             transition-all duration-250 ease-[cubic-bezier(0.23,1,0.32,1)]
-            ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0 md:w-0 md:border-0'}
-            absolute md:relative inset-y-0 left-0 z-20 md:z-auto
+            ${sidebarOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0 md:w-0 md:border-0'}
+            absolute md:relative inset-y-0 right-0 z-20 md:z-auto
           `}
           style={{ top: 56 }}
         >
@@ -401,7 +400,7 @@ export default function DashboardPage() {
           <div className="flex-shrink-0 px-4 py-4 border-b border-zinc-800">
             <div className="flex items-center gap-2 mb-3">
               <BookOpen className="w-4 h-4 text-violet-400" />
-              <h2 className="text-sm font-semibold text-zinc-200">Course Content</h2>
+              <h2 className="text-sm font-semibold text-zinc-200">תוכן הקורס</h2>
             </div>
             <div className="flex items-center gap-2">
               <div className="flex-1 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
@@ -443,10 +442,10 @@ export default function DashboardPage() {
                         key={lesson.id}
                         onClick={() => selectLesson(lesson.id)}
                         className={`
-                          w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors duration-150
+                          w-full flex items-center gap-3 px-4 py-2.5 text-right transition-colors duration-150
                           ${isActive
-                            ? 'bg-violet-500/10 border-r-2 border-violet-500'
-                            : 'hover:bg-zinc-900/60 border-r-2 border-transparent'
+                            ? 'bg-violet-500/10 border-l-2 border-violet-500'
+                            : 'hover:bg-zinc-900/60 border-l-2 border-transparent'
                           }
                         `}
                       >
@@ -519,12 +518,12 @@ export default function DashboardPage() {
                     className="btn-press flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-sm text-zinc-300 transition-colors duration-150"
                   >
                     <Circle className="w-4 h-4" />
-                    Mark complete
+                    סמן כהושלם
                   </button>
                 ) : (
                   <div className="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-sm text-emerald-400">
                     <CheckCircle2 className="w-4 h-4" />
-                    Completed
+                    הושלם
                   </div>
                 )}
               </div>
@@ -534,23 +533,8 @@ export default function DashboardPage() {
               </p>
             </div>
 
-            {/* Prev / Next navigation */}
+            {/* Prev / Next navigation — icons swapped for RTL */}
             <div className="flex items-center justify-between gap-4 mt-6">
-              {prevLesson ? (
-                <button
-                  onClick={() => setActiveLessonId(prevLesson.id)}
-                  className="btn-press flex items-center gap-2 px-4 py-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-sm text-zinc-300 transition-colors duration-150 min-w-0 flex-1"
-                >
-                  <ChevronLeft className="w-4 h-4 flex-shrink-0" />
-                  <div className="text-left min-w-0">
-                    <p className="text-xs text-zinc-600 mb-0.5">Previous</p>
-                    <p className="text-sm font-medium truncate">{prevLesson.title}</p>
-                  </div>
-                </button>
-              ) : (
-                <div className="flex-1" />
-              )}
-
               {nextLesson ? (
                 <button
                   onClick={() => {
@@ -559,24 +543,39 @@ export default function DashboardPage() {
                   }}
                   className="btn-press flex items-center gap-2 px-4 py-3 rounded-xl bg-violet-600 hover:bg-violet-500 text-sm text-white font-medium transition-colors duration-150 min-w-0 flex-1"
                 >
+                  <ChevronRight className="w-4 h-4 flex-shrink-0" />
                   <div className="text-right min-w-0 flex-1">
-                    <p className="text-xs text-violet-300 mb-0.5">Next lesson</p>
+                    <p className="text-xs text-violet-300 mb-0.5">השיעור הבא</p>
                     <p className="text-sm font-medium truncate">{nextLesson.title}</p>
                   </div>
-                  <ChevronRight className="w-4 h-4 flex-shrink-0" />
                 </button>
               ) : (
                 <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-sm text-emerald-400 flex-1">
                   <Star className="w-4 h-4 flex-shrink-0 fill-emerald-400" />
-                  <span className="font-medium">Course complete! 🎉</span>
+                  <span className="font-medium">הקורס הושלם! 🎉</span>
                 </div>
+              )}
+
+              {prevLesson ? (
+                <button
+                  onClick={() => setActiveLessonId(prevLesson.id)}
+                  className="btn-press flex items-center gap-2 px-4 py-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-sm text-zinc-300 transition-colors duration-150 min-w-0 flex-1"
+                >
+                  <div className="text-left min-w-0 flex-1">
+                    <p className="text-xs text-zinc-600 mb-0.5">הקודם</p>
+                    <p className="text-sm font-medium truncate">{prevLesson.title}</p>
+                  </div>
+                  <ChevronLeft className="w-4 h-4 flex-shrink-0" />
+                </button>
+              ) : (
+                <div className="flex-1" />
               )}
             </div>
 
             {/* All modules quick-nav */}
             <div className="mt-10">
               <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">
-                All modules
+                כל המודולים
               </h2>
               <div className="grid sm:grid-cols-2 gap-3">
                 {curriculum.map((mod) => {
@@ -589,7 +588,7 @@ export default function DashboardPage() {
                       key={mod.id}
                       onClick={() => selectLesson(mod.lessons[0].id)}
                       className={`
-                        btn-press flex items-center gap-3 p-4 rounded-xl border text-left transition-colors duration-150
+                        btn-press flex items-center gap-3 p-4 rounded-xl border text-right transition-colors duration-150
                         ${isCurrentModule
                           ? 'bg-violet-500/8 border-violet-500/25'
                           : 'bg-zinc-900/50 border-zinc-800 hover:border-zinc-700'
@@ -602,7 +601,7 @@ export default function DashboardPage() {
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-zinc-200 truncate">{mod.title}</p>
                         <p className="text-xs text-zinc-500 mt-0.5">
-                          {doneCount}/{mod.lessons.length} lessons
+                          {doneCount}/{mod.lessons.length} שיעורים
                         </p>
                       </div>
                       {doneCount === mod.lessons.length && (

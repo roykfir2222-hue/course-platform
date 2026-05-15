@@ -7,7 +7,7 @@ import {
   Play,
   Star,
   Check,
-  ArrowRight,
+  ArrowLeft,
   BookOpen,
   Users,
   Trophy,
@@ -75,7 +75,7 @@ const testimonials = [
     role: 'Senior Engineer at Stripe',
     avatar: 'SC',
     content:
-      'This course completely changed how I think about full-stack architecture. The project-based approach meant I was building real things from day one. Worth every penny.',
+      'הקורס הזה שינה לחלוטין את הדרך שבה אני חושבת על ארכיטקטורת full-stack. הגישה המבוססת-פרויקט אומרת שבניתי דברים אמיתיים מהיום הראשון. שווה כל שקל.',
     rating: 5,
   },
   {
@@ -83,7 +83,7 @@ const testimonials = [
     role: 'Founder, DevLaunch',
     avatar: 'MW',
     content:
-      'I went from knowing basic HTML to shipping a SaaS product in 3 months. The section on authentication and database design alone was worth the entire price.',
+      'עברתי מידיעת HTML בסיסית לשליחת מוצר SaaS תוך 3 חודשים. הפרק על authentication ועיצוב בסיסי נתונים לבדו שווה את כל המחיר.',
     rating: 5,
   },
   {
@@ -91,31 +91,31 @@ const testimonials = [
     role: 'Software Engineer at Vercel',
     avatar: 'PP',
     content:
-      "The best structured programming course I've taken. Every concept builds on the last, and the instructor explains the \"why\" behind every decision — not just the \"how\".",
+      'הקורס התכנות המובנה ביותר שלקחתי. כל מושג בנוי על הקודם, והמדריך מסביר את ה"למה" מאחורי כל החלטה — לא רק את ה"איך".',
     rating: 5,
   },
 ]
 
 const faqs = [
   {
-    q: 'Do I need prior coding experience?',
-    a: 'Basic JavaScript knowledge is helpful, but the course starts from the fundamentals. We cover everything you need to understand each concept before building on it.',
+    q: 'האם אני צריך ניסיון קודם בתכנות?',
+    a: 'ידע בסיסי ב-JavaScript מועיל, אך הקורס מתחיל מהיסודות. אנחנו מכסים כל מה שצריך להבין כל מושג לפני שבונים עליו.',
   },
   {
-    q: 'How long do I have access?',
-    a: 'Lifetime access. Once you enroll, the course and all future updates are yours forever — including new modules added as the ecosystem evolves.',
+    q: 'כמה זמן יש לי גישה?',
+    a: 'גישה לנצח. ברגע שנרשמת, הקורס וכל העדכונים העתידיים הם שלך לתמיד — כולל מודולים חדשים שיתווספו ככל שהאקוסיסטם מתפתח.',
   },
   {
-    q: 'Is there a refund policy?',
-    a: 'Yes. If you are not satisfied within the first 30 days, we offer a full refund — no questions asked.',
+    q: 'האם יש מדיניות החזר?',
+    a: 'כן. אם אינך מרוצה ב-30 הימים הראשונים, אנחנו מציעים החזר כספי מלא — ללא שאלות.',
   },
   {
-    q: 'Will this work on Windows, Mac, and Linux?',
-    a: 'Absolutely. All tools and workflows demonstrated in the course are cross-platform. Setup guides are provided for each OS.',
+    q: 'האם זה יעבוד על Windows, Mac ו-Linux?',
+    a: 'בהחלט. כל הכלים וזרימות העבודה המוצגות בקורס הן חוצות-פלטפורמות. מדריכי התקנה ניתנים לכל מערכת הפעלה.',
   },
   {
-    q: 'Is there a community or support channel?',
-    a: 'Enrolled students get access to a private Discord server with the instructor and fellow students for code reviews, questions, and networking.',
+    q: 'האם יש קהילה או ערוץ תמיכה?',
+    a: 'תלמידים רשומים מקבלים גישה לשרת Discord פרטי עם המדריך וחברי הקבוצה לבקורות קוד, שאלות ונטוורקינג.',
   },
 ]
 
@@ -135,13 +135,13 @@ function NavBar() {
           href="/login"
           className="text-sm text-zinc-400 hover:text-zinc-200 transition-colors duration-150 px-4 py-2"
         >
-          Sign in
+          התחבר
         </Link>
         <Link
           href="/register"
           className="btn-press text-sm font-medium bg-violet-600 hover:bg-violet-500 text-white px-5 py-2 rounded-lg transition-colors duration-150"
         >
-          Get Access
+          קבל גישה
         </Link>
       </div>
     </nav>
@@ -171,7 +171,7 @@ function HeroSection() {
           style={{ animation: 'fadeIn 0.5s ease-out forwards' }}
         >
           <span className="w-2 h-2 rounded-full bg-violet-400 animate-pulse-slow" />
-          Now Enrolling — Cohort 4
+          נרשמים עכשיו — קבוצה 4
         </div>
 
         {/* Headline */}
@@ -179,9 +179,9 @@ function HeroSection() {
           className="text-5xl sm:text-6xl md:text-7xl font-bold text-white tracking-tight leading-[1.04] mb-6"
           style={{ animation: 'fadeUp 0.7s cubic-bezier(0.23,1,0.32,1) 0.1s forwards', opacity: 0 }}
         >
-          Master Full-Stack
+          שלוט בפיתוח Full-Stack
           <br />
-          <span className="gradient-text">from Zero to Production</span>
+          <span className="gradient-text">מאפס ועד Production</span>
         </h1>
 
         {/* Subtext */}
@@ -189,8 +189,8 @@ function HeroSection() {
           className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed"
           style={{ animation: 'fadeUp 0.7s cubic-bezier(0.23,1,0.32,1) 0.2s forwards', opacity: 0 }}
         >
-          A complete, project-based course covering React, Node.js, PostgreSQL, and production deployment.
-          Join 500+ developers who've already shipped real products.
+          קורס מלא ומבוסס-פרויקטים המכסה React, Node.js, PostgreSQL ופריסה לפרודקשן.
+          הצטרף ל-500+ מפתחים שכבר שלחו מוצרים אמיתיים.
         </p>
 
         {/* CTA */}
@@ -202,10 +202,10 @@ function HeroSection() {
             href="/register"
             className="btn-press group inline-flex items-center gap-2 px-8 py-4 bg-violet-600 hover:bg-violet-500 text-white font-semibold rounded-xl text-base transition-colors duration-150 shadow-[0_0_40px_rgba(124,58,237,0.3)]"
           >
-            Get Instant Access
-            <ArrowRight className="w-4 h-4 transition-transform duration-150 group-hover:translate-x-0.5" />
+            קבל גישה מיידית
+            <ArrowLeft className="w-4 h-4 transition-transform duration-150 group-hover:-translate-x-0.5" />
           </Link>
-          <p className="text-sm text-zinc-500">30-day money-back guarantee</p>
+          <p className="text-sm text-zinc-500">אחריות החזר כספי 30 יום</p>
         </div>
 
         {/* Stats */}
@@ -214,10 +214,10 @@ function HeroSection() {
           style={{ animation: 'fadeUp 0.7s cubic-bezier(0.23,1,0.32,1) 0.4s forwards', opacity: 0 }}
         >
           {[
-            { value: '500+', label: 'Students' },
-            { value: '4.9★', label: 'Average rating' },
-            { value: '18', label: 'Video lessons' },
-            { value: '∞', label: 'Lifetime access' },
+            { value: '500+', label: 'תלמידים' },
+            { value: '4.9★', label: 'דירוג ממוצע' },
+            { value: '18', label: 'שיעורי וידאו' },
+            { value: '∞', label: 'גישה לנצח' },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
               <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
@@ -235,12 +235,12 @@ function CurriculumSection() {
     <section id="curriculum" className="py-24 px-6 bg-zinc-950">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-16">
-          <p className="text-violet-400 font-medium text-sm uppercase tracking-widest mb-3">Curriculum</p>
+          <p className="text-violet-400 font-medium text-sm uppercase tracking-widest mb-3">תכנית הלימודים</p>
           <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-4">
-            Everything you need to ship
+            כל מה שצריך כדי לשלוח לפרודקשן
           </h2>
           <p className="text-zinc-400 text-lg max-w-xl mx-auto">
-            18 lessons across 6 modules. No fluff — every lesson teaches something you'll use in the real world.
+            18 שיעורים ב-6 מודולים. ללא מיותר — כל שיעור מלמד משהו שתשתמש בו בעולם האמיתי.
           </p>
         </div>
 
@@ -258,7 +258,7 @@ function CurriculumSection() {
                   <div className="flex items-center justify-between gap-2 mb-1">
                     <h3 className="font-semibold text-zinc-100 text-sm">{mod.title}</h3>
                     <span className="text-xs text-zinc-500 flex-shrink-0">
-                      {mod.lessons} lessons · {mod.duration}
+                      {mod.lessons} שיעורים · {mod.duration}
                     </span>
                   </div>
                   <ul className="space-y-1">
@@ -283,18 +283,18 @@ function WhySection() {
   const reasons = [
     {
       icon: Zap,
-      title: 'Project-first learning',
-      body: 'Every concept is learned by building something real. No toy examples — you ship a complete SaaS product by the end of the course.',
+      title: 'למידה מוכוונת-פרויקט',
+      body: 'כל מושג נלמד על ידי בניית משהו אמיתי. ללא דוגמאות סינתטיות — אתה שולח אפליקציית SaaS שלמה עד סיום הקורס.',
     },
     {
       icon: BookOpen,
-      title: 'Depth over breadth',
-      body: 'We go deep on the things that matter most: architecture, state management, security, and performance. Not a surface-level overview.',
+      title: 'עומק על פני רוחב',
+      body: 'אנחנו הולכים לעומק בדברים שחשובים ביותר: ארכיטקטורה, ניהול state, אבטחה וביצועים. לא סקירה שטחית.',
     },
     {
       icon: Users,
-      title: 'Private community',
-      body: 'Join a Discord with the instructor and 500+ alumni. Get code reviews, answer questions, and find collaborators for your projects.',
+      title: 'קהילה פרטית',
+      body: 'הצטרף ל-Discord עם המדריך ו-500+ בוגרים. קבל ביקורות קוד, ענה על שאלות ומצא שותפים לפרויקטים.',
     },
   ]
 
@@ -302,9 +302,9 @@ function WhySection() {
     <section className="py-24 px-6 bg-zinc-900/30">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-16">
-          <p className="text-violet-400 font-medium text-sm uppercase tracking-widest mb-3">Why this course</p>
+          <p className="text-violet-400 font-medium text-sm uppercase tracking-widest mb-3">למה הקורס הזה</p>
           <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
-            Built differently
+            בנוי אחרת
           </h2>
         </div>
         <div className="grid md:grid-cols-3 gap-6 stagger-children">
@@ -337,16 +337,16 @@ function InstructorSection() {
           {/* Bio */}
           <div>
             <p className="text-violet-400 text-xs font-medium uppercase tracking-widest mb-2">
-              Your Instructor
+              המדריך שלך
             </p>
             <h3 className="text-xl font-bold text-white mb-1">Jordan Rivera</h3>
             <p className="text-zinc-400 text-sm mb-4">
-              Staff Engineer · 12 years building production systems
+              Staff Engineer · 12 שנות ניסיון בבניית מערכות פרודקשן
             </p>
             <p className="text-zinc-400 text-sm leading-relaxed mb-6">
-              I've built products used by millions of people at companies like Meta and early-stage startups.
-              This course distills 12 years of hard-won lessons into the clearest, most practical curriculum
-              I know how to build. I teach the way I wished I was taught.
+              בניתי מוצרים שמשמשים מיליוני אנשים בחברות כמו Meta וסטארטאפים בשלבים מוקדמים.
+              הקורס הזה מזקק 12 שנות לקחים קשים לתוכנית הלימודים הברורה והמעשית ביותר שידעתי לבנות.
+              אני מלמד כפי שהייתי רוצה שילמדו אותי.
             </p>
             <div className="flex flex-wrap gap-2">
               {['React', 'Node.js', 'PostgreSQL', 'TypeScript', 'AWS'].map((tag) => (
@@ -370,9 +370,9 @@ function TestimonialsSection() {
     <section className="py-24 px-6 bg-zinc-900/30">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-16">
-          <p className="text-violet-400 font-medium text-sm uppercase tracking-widest mb-3">Testimonials</p>
+          <p className="text-violet-400 font-medium text-sm uppercase tracking-widest mb-3">חוות דעת</p>
           <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
-            What students are saying
+            מה התלמידים אומרים
           </h2>
         </div>
         <div className="grid md:grid-cols-3 gap-6 stagger-children">
@@ -405,34 +405,34 @@ function TestimonialsSection() {
 
 function PricingSection() {
   const features = [
-    '18 in-depth video lessons',
-    '6 structured modules',
-    'Full source code on GitHub',
-    'Private Discord community',
-    'Certificate of completion',
-    'Lifetime access + free updates',
-    '30-day money-back guarantee',
+    '18 שיעורי וידאו מעמיקים',
+    '6 מודולים מובנים',
+    'קוד מקור מלא ב-GitHub',
+    'קהילת Discord פרטית',
+    'תעודת סיום',
+    'גישה לנצח + עדכונים חינם',
+    'אחריות החזר כספי 30 יום',
   ]
 
   return (
     <section id="pricing" className="py-24 px-6 bg-zinc-950">
       <div className="max-w-lg mx-auto">
         <div className="text-center mb-12">
-          <p className="text-violet-400 font-medium text-sm uppercase tracking-widest mb-3">Pricing</p>
+          <p className="text-violet-400 font-medium text-sm uppercase tracking-widest mb-3">מחירים</p>
           <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
-            One price, forever
+            מחיר אחד, לנצח
           </h2>
         </div>
 
         <div className="gradient-border glass-card rounded-2xl p-8 text-center">
-          <p className="text-zinc-400 text-sm mb-2">Full course access</p>
+          <p className="text-zinc-400 text-sm mb-2">גישה מלאה לקורס</p>
           <div className="flex items-start justify-center gap-1 mb-1">
             <span className="text-zinc-400 text-xl mt-3">$</span>
             <span className="text-6xl font-bold text-white tracking-tight">197</span>
           </div>
-          <p className="text-zinc-500 text-sm mb-8">One-time payment · No subscription</p>
+          <p className="text-zinc-500 text-sm mb-8">תשלום חד-פעמי · ללא מנוי</p>
 
-          <ul className="space-y-3 mb-8 text-left">
+          <ul className="space-y-3 mb-8 text-right">
             {features.map((f) => (
               <li key={f} className="flex items-center gap-3 text-sm text-zinc-300">
                 <div className="w-5 h-5 rounded-full bg-violet-500/15 border border-violet-500/30 flex items-center justify-center flex-shrink-0">
@@ -447,9 +447,9 @@ function PricingSection() {
             href="/register"
             className="btn-press block w-full py-4 bg-violet-600 hover:bg-violet-500 text-white font-semibold rounded-xl text-base transition-colors duration-150 shadow-[0_0_30px_rgba(124,58,237,0.25)]"
           >
-            Enroll Now — $197
+            הירשם עכשיו — $197
           </Link>
-          <p className="text-xs text-zinc-600 mt-4">Secure checkout · 30-day refund</p>
+          <p className="text-xs text-zinc-600 mt-4">תשלום מאובטח · החזר ל-30 יום</p>
         </div>
       </div>
     </section>
@@ -463,15 +463,15 @@ function FaqSection() {
     <section className="py-24 px-6 bg-zinc-900/30">
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-12">
-          <p className="text-violet-400 font-medium text-sm uppercase tracking-widest mb-3">FAQ</p>
-          <h2 className="text-3xl font-bold text-white tracking-tight">Common questions</h2>
+          <p className="text-violet-400 font-medium text-sm uppercase tracking-widest mb-3">שאלות נפוצות</p>
+          <h2 className="text-3xl font-bold text-white tracking-tight">שאלות נפוצות</h2>
         </div>
         <div className="space-y-3">
           {faqs.map((faq, i) => (
             <div key={i} className="glass-card rounded-xl overflow-hidden">
               <button
                 onClick={() => setOpenIdx(openIdx === i ? null : i)}
-                className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-zinc-800/40 transition-colors duration-150"
+                className="w-full flex items-center justify-between px-6 py-4 text-right hover:bg-zinc-800/40 transition-colors duration-150"
               >
                 <span className="font-medium text-zinc-100 text-sm pr-4">{faq.q}</span>
                 <ChevronDown
@@ -505,17 +505,17 @@ function CtaBanner() {
             <Trophy className="w-7 h-7 text-violet-400" />
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-4">
-            Ready to level up?
+            מוכן לעלות רמה?
           </h2>
           <p className="text-zinc-400 text-lg mb-8 max-w-lg mx-auto">
-            Join 500+ developers who've already shipped their first production app. Start today.
+            הצטרף ל-500+ מפתחים שכבר שלחו את האפליקציה הראשונה שלהם לפרודקשן. התחל היום.
           </p>
           <Link
             href="/register"
             className="btn-press inline-flex items-center gap-2 px-8 py-4 bg-violet-600 hover:bg-violet-500 text-white font-semibold rounded-xl text-base transition-colors duration-150 shadow-[0_0_40px_rgba(124,58,237,0.3)]"
           >
-            Get Instant Access
-            <ArrowRight className="w-4 h-4" />
+            קבל גישה מיידית
+            <ArrowLeft className="w-4 h-4" />
           </Link>
         </div>
       </div>
@@ -535,13 +535,13 @@ function Footer() {
         </div>
         <div className="flex items-center gap-6">
           <Link href="/login" className="text-sm text-zinc-500 hover:text-zinc-300 transition-colors">
-            Sign in
+            התחבר
           </Link>
           <Link href="/register" className="text-sm text-zinc-500 hover:text-zinc-300 transition-colors">
-            Enroll
+            הצטרף
           </Link>
         </div>
-        <p className="text-xs text-zinc-600">© {new Date().getFullYear()} Masterclass. All rights reserved.</p>
+        <p className="text-xs text-zinc-600">© {new Date().getFullYear()} Masterclass. כל הזכויות שמורות.</p>
       </div>
     </footer>
   )

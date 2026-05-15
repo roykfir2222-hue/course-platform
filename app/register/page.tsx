@@ -5,10 +5,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
   Terminal,
-  ArrowRight,
+  ArrowLeft,
   Loader2,
-  Eye,
-  EyeOff,
   AlertCircle,
   ShieldCheck,
 } from 'lucide-react'
@@ -18,7 +16,6 @@ type FormData = {
   name: string
   phone: string
   email: string
-  password: string
 }
 
 type FieldErrors = Partial<Record<keyof FormData, string>>
@@ -26,16 +23,13 @@ type FieldErrors = Partial<Record<keyof FormData, string>>
 function validateForm(data: FormData): FieldErrors {
   const errors: FieldErrors = {}
   if (!data.name.trim() || data.name.trim().length < 2) {
-    errors.name = 'Enter your full name.'
+    errors.name = 'אנא הזן שם מלא.'
   }
   if (!data.phone.trim() || !/^\+?[\d\s\-()]{7,}$/.test(data.phone)) {
-    errors.phone = 'Enter a valid phone number.'
+    errors.phone = 'אנא הזן מספר טלפון תקין.'
   }
   if (!data.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-    errors.email = 'Enter a valid email address.'
-  }
-  if (!data.password || data.password.length < 8) {
-    errors.password = 'Password must be at least 8 characters.'
+    errors.email = 'אנא הזן כתובת אימייל תקינה.'
   }
   return errors
 }
@@ -44,11 +38,10 @@ const OTP_LENGTH = 6
 
 export default function RegisterPage() {
   const router = useRouter()
-  const [form, setForm] = useState<FormData>({ name: '', phone: '', email: '', password: '' })
+  const [form, setForm] = useState<FormData>({ name: '', phone: '', email: '' })
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
   const [serverError, setServerError] = useState('')
   const [loading, setLoading] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
   const [step, setStep] = useState<'form' | 'otp'>('form')
   const [otpDigits, setOtpDigits] = useState<string[]>(Array(OTP_LENGTH).fill(''))
   const [otpError, setOtpError] = useState('')
@@ -71,7 +64,6 @@ export default function RegisterPage() {
   }
 
   function handleOtpChange(index: number, value: string) {
-    // Handle paste of full code
     if (value.length > 1) {
       const digits = value.replace(/\D/g, '').slice(0, OTP_LENGTH).split('')
       const newDigits = [...otpDigits]
@@ -83,13 +75,11 @@ export default function RegisterPage() {
       otpRefs.current[nextIndex]?.focus()
       return
     }
-
     const digit = value.replace(/\D/g, '')
     const newDigits = [...otpDigits]
     newDigits[index] = digit
     setOtpDigits(newDigits)
     setOtpError('')
-
     if (digit && index < OTP_LENGTH - 1) {
       otpRefs.current[index + 1]?.focus()
     }
@@ -115,41 +105,18 @@ export default function RegisterPage() {
 
     const supabase = createClient()
 
-    // Create the auth user — Supabase will email the 6-digit OTP code
-    const { data: authData, error: signUpError } = await supabase.auth.signUp({
+    const { error: signInError } = await supabase.auth.signInWithOtp({
       email: form.email.trim().toLowerCase(),
-      password: form.password,
       options: {
+        shouldCreateUser: true,
         data: { name: form.name.trim() },
       },
     })
 
-    if (signUpError) {
-      setServerError(signUpError.message)
+    if (signInError) {
+      setServerError(signInError.message)
       setLoading(false)
       return
-    }
-
-    if (!authData.user) {
-      setServerError('Something went wrong. Please try again.')
-      setLoading(false)
-      return
-    }
-
-    // Upsert the profile row — DB trigger may have created a bare row already
-    const { error: profileError } = await supabase.from('profiles').upsert(
-      {
-        id: authData.user.id,
-        email: form.email.trim().toLowerCase(),
-        name: form.name.trim(),
-        phone: form.phone.trim(),
-        has_access: false,
-      },
-      { onConflict: 'id' }
-    )
-
-    if (profileError) {
-      console.error('Profile upsert error:', profileError.message)
     }
 
     setLoading(false)
@@ -161,7 +128,7 @@ export default function RegisterPage() {
 
     const token = otpDigits.join('')
     if (token.length < OTP_LENGTH) {
-      setOtpError('Please enter all 6 digits.')
+      setOtpError('אנא הזן את כל 6 הספרות.')
       return
     }
 
@@ -169,19 +136,36 @@ export default function RegisterPage() {
     setOtpError('')
 
     const supabase = createClient()
-    const { error } = await supabase.auth.verifyOtp({
+    const { data, error } = await supabase.auth.verifyOtp({
       email: form.email.trim().toLowerCase(),
       token,
-      type: 'signup',
+      type: 'email',
     })
 
     if (error) {
-      setOtpError(error.message)
+      setOtpError('הקוד שגוי או פג תוקפו. אנא נסה שנית.')
       setOtpLoading(false)
       return
     }
 
-    router.push('/dashboard')
+    if (data.user) {
+      // Upsert profile after successful OTP verification
+      const { error: profileError } = await supabase.from('profiles').upsert(
+        {
+          id: data.user.id,
+          email: form.email.trim().toLowerCase(),
+          name: form.name.trim(),
+          phone: form.phone.trim(),
+          has_access: false,
+        },
+        { onConflict: 'id' }
+      )
+      if (profileError) {
+        console.error('Profile upsert error:', profileError.message)
+      }
+    }
+
+    router.push('/payment')
     router.refresh()
   }
 
@@ -219,13 +203,13 @@ export default function RegisterPage() {
               style={{ animation: 'fadeUp 0.5s cubic-bezier(0.23,1,0.32,1) 0.15s forwards', opacity: 0 }}
             >
               <p className="text-xs font-medium text-violet-400 uppercase tracking-widest mb-3">
-                אימות מייל
+                אימות אימייל
               </p>
-              <h2 className="text-xl font-bold text-white mb-3" dir="rtl">
+              <h2 className="text-xl font-bold text-white mb-3">
                 הכנס את הקוד שנשלח אליך
               </h2>
               <p className="text-zinc-500 text-sm">
-                Sent to{' '}
+                נשלח אל{' '}
                 <span className="text-zinc-300 font-medium">{form.email}</span>
               </p>
             </div>
@@ -247,7 +231,7 @@ export default function RegisterPage() {
                     onKeyDown={(e) => handleOtpKeyDown(i, e)}
                     onFocus={(e) => e.target.select()}
                     className="w-11 h-14 text-center text-xl font-bold bg-zinc-900 border border-zinc-700 rounded-xl text-white focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 transition-colors"
-                    aria-label={`Digit ${i + 1}`}
+                    aria-label={`ספרה ${i + 1}`}
                   />
                 ))}
               </div>
@@ -268,12 +252,12 @@ export default function RegisterPage() {
                   {otpLoading ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      Verifying…
+                      מאמת...
                     </>
                   ) : (
                     <>
-                      Verify & Continue
-                      <ArrowRight className="w-4 h-4" />
+                      אמת והמשך
+                      <ArrowLeft className="w-4 h-4" />
                     </>
                   )}
                 </button>
@@ -284,7 +268,7 @@ export default function RegisterPage() {
               className="text-center text-xs text-zinc-600 mt-6"
               style={{ animation: 'fadeUp 0.5s cubic-bezier(0.23,1,0.32,1) 0.3s forwards', opacity: 0 }}
             >
-              Didn't receive a code?{' '}
+              לא קיבלת קוד?{' '}
               <button
                 type="button"
                 onClick={() => {
@@ -294,7 +278,7 @@ export default function RegisterPage() {
                 }}
                 className="text-zinc-500 hover:text-zinc-300 transition-colors underline underline-offset-2"
               >
-                Go back
+                חזור
               </button>
             </p>
           </div>
@@ -312,7 +296,6 @@ export default function RegisterPage() {
         className="relative w-full max-w-md"
         style={{ animation: 'scaleIn 0.4s cubic-bezier(0.23,1,0.32,1) forwards' }}
       >
-        {/* Logo */}
         <div className="flex justify-center mb-8">
           <Link href="/" className="flex items-center gap-2 group">
             <div className="w-8 h-8 rounded-xl bg-violet-600 flex items-center justify-center">
@@ -324,11 +307,10 @@ export default function RegisterPage() {
           </Link>
         </div>
 
-        {/* Card */}
         <div className="glass-card rounded-2xl p-8">
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-white mb-2">Create your account</h1>
-            <p className="text-zinc-400 text-sm">Join the course and start learning today</p>
+            <h1 className="text-2xl font-bold text-white mb-2">צור את החשבון שלך</h1>
+            <p className="text-zinc-400 text-sm">הצטרף לקורס והתחל ללמוד היום</p>
           </div>
 
           {serverError && (
@@ -342,14 +324,14 @@ export default function RegisterPage() {
             {/* Name */}
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-zinc-300 mb-2">
-                Full Name
+                שם מלא
               </label>
               <input
                 id="name"
                 name="name"
                 type="text"
                 autoComplete="name"
-                placeholder="Jordan Rivera"
+                placeholder="ישראל ישראלי"
                 value={form.name}
                 onChange={handleChange}
                 className={`input-field ${fieldErrors.name ? 'border-red-500/60 focus:border-red-500' : ''}`}
@@ -362,17 +344,18 @@ export default function RegisterPage() {
             {/* Phone */}
             <div>
               <label htmlFor="phone" className="block text-sm font-medium text-zinc-300 mb-2">
-                Phone Number
+                מספר טלפון
               </label>
               <input
                 id="phone"
                 name="phone"
                 type="tel"
                 autoComplete="tel"
-                placeholder="+1 (555) 000-0000"
+                placeholder="050-000-0000"
                 value={form.phone}
                 onChange={handleChange}
                 className={`input-field ${fieldErrors.phone ? 'border-red-500/60 focus:border-red-500' : ''}`}
+                dir="ltr"
               />
               {fieldErrors.phone && (
                 <p className="mt-1.5 text-xs text-red-400">{fieldErrors.phone}</p>
@@ -382,7 +365,7 @@ export default function RegisterPage() {
             {/* Email */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-zinc-300 mb-2">
-                Email Address
+                כתובת אימייל
               </label>
               <input
                 id="email"
@@ -393,39 +376,10 @@ export default function RegisterPage() {
                 value={form.email}
                 onChange={handleChange}
                 className={`input-field ${fieldErrors.email ? 'border-red-500/60 focus:border-red-500' : ''}`}
+                dir="ltr"
               />
               {fieldErrors.email && (
                 <p className="mt-1.5 text-xs text-red-400">{fieldErrors.email}</p>
-              )}
-            </div>
-
-            {/* Password */}
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-zinc-300 mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="new-password"
-                  placeholder="At least 8 characters"
-                  value={form.password}
-                  onChange={handleChange}
-                  className={`input-field pr-11 ${fieldErrors.password ? 'border-red-500/60 focus:border-red-500' : ''}`}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors p-1"
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-              {fieldErrors.password && (
-                <p className="mt-1.5 text-xs text-red-400">{fieldErrors.password}</p>
               )}
             </div>
 
@@ -438,30 +392,30 @@ export default function RegisterPage() {
               {loading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Creating account…
+                  יוצר חשבון...
                 </>
               ) : (
                 <>
-                  Continue
-                  <ArrowRight className="w-4 h-4" />
+                  המשך
+                  <ArrowLeft className="w-4 h-4" />
                 </>
               )}
             </button>
           </form>
 
           <p className="text-center text-sm text-zinc-500 mt-6">
-            Already have an account?{' '}
+            כבר יש לך חשבון?{' '}
             <Link
               href="/login"
               className="text-violet-400 hover:text-violet-300 transition-colors font-medium"
             >
-              Sign in
+              התחבר
             </Link>
           </p>
         </div>
 
         <p className="text-center text-xs text-zinc-600 mt-6">
-          By registering you agree to our terms of service and privacy policy.
+          בהרשמה אתה מסכים לתנאי השירות ומדיניות הפרטיות שלנו.
         </p>
       </div>
     </div>
